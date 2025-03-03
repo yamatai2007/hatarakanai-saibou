@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>はたらかない細胞 - クイズゲーム</title>
   <link rel="stylesheet" href="styles.css">
-  <!-- Google Fonts などでオシャレなフォントを読み込むのもおすすめ -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
   <!-- スタート画面 -->
@@ -29,9 +27,9 @@
   <div id="section-antigen" class="section" style="display: none;">
     <h2>抗原数を選択してください</h2>
     <div class="counter">
-      <button onclick="changeAntigen(-1)">-</button>
+      <button onclick="changeAntigen(-1)">－</button>
       <input type="number" id="antigenCount" value="0" min="0">
-      <button onclick="changeAntigen(1)">+</button>
+      <button onclick="changeAntigen(1)">＋</button>
     </div>
     <div class="nav-buttons">
       <button class="btn-prev" onclick="navigate('group')">前へ</button>
@@ -43,11 +41,11 @@
   <div id="section-quiz-difficulty" class="section" style="display: none;">
     <h2>クイズの難易度を選択してください</h2>
     <div id="difficulty-buttons" class="button-group">
-      <button onclick="selectDifficulty(1)">レベル1</button>
-      <button onclick="selectDifficulty(2)">レベル2</button>
-      <button onclick="selectDifficulty(3)">レベル3</button>
-      <button onclick="selectDifficulty(4)">レベル4</button>
-      <button onclick="selectDifficulty(5)">レベル5</button>
+      <button class="difficulty-btn" onclick="selectDifficulty(1, this)">レベル1</button>
+      <button class="difficulty-btn" onclick="selectDifficulty(2, this)">レベル2</button>
+      <button class="difficulty-btn" onclick="selectDifficulty(3, this)">レベル3</button>
+      <button class="difficulty-btn" onclick="selectDifficulty(4, this)">レベル4</button>
+      <button class="difficulty-btn" onclick="selectDifficulty(5, this)">レベル5</button>
     </div>
     <div class="nav-buttons">
       <button class="btn-prev" onclick="navigate('antigen')">前へ</button>
@@ -65,11 +63,12 @@
       </div>
       <div id="quiz-feedback" class="feedback" style="display: none;">
         <p id="feedback-text"></p>
-        <button class="btn-next" onclick="nextAfterQuiz()">次へ</button>
+        <button onclick="nextAfterQuiz()">次へ</button>
       </div>
     </div>
     <div class="nav-buttons">
       <button class="btn-prev" onclick="navigate('quiz-difficulty')">前へ</button>
+      <!-- 「次へ」はフィードバック後に進む -->
     </div>
   </div>
 
@@ -77,9 +76,9 @@
   <div id="section-target" class="section" style="display: none;">
     <h2>的の数を入力してください</h2>
     <div class="counter">
-      <button onclick="changeTarget(-1)">-</button>
+      <button onclick="changeTarget(-1)">－</button>
       <input type="number" id="targetCount" value="0" min="0">
-      <button onclick="changeTarget(1)">+</button>
+      <button onclick="changeTarget(1)">＋</button>
     </div>
     <div class="nav-buttons">
       <button class="btn-prev" onclick="navigate('quiz')">前へ</button>
