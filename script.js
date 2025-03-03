@@ -130,13 +130,13 @@ function loadQuizQuestion() {
       const img = document.createElement('img');
       img.src = option.image;
       img.alt = option.text;
-      img.style.maxWidth = "100%";
       div.appendChild(img);
     }
     const span = document.createElement('span');
     span.innerText = option.text;
     div.appendChild(span);
-    div.addEventListener('click', () => { selectQuizOption(option); });
+    // クリック時に「selected」クラスを付与
+    div.addEventListener('click', (e) => { selectQuizOption(option, e.currentTarget); });
     optionsContainer.appendChild(div);
   });
   // フィードバック部分を非表示に
@@ -144,8 +144,13 @@ function loadQuizQuestion() {
   navigate('quiz');
 }
 
-// 選択肢がクリックされた時の処理
-function selectQuizOption(option) {
+// 選択肢がクリックされた時の処理（選択状態を視覚的に表示）
+function selectQuizOption(option, selectedElem) {
+  // 全ての選択肢から "selected" クラスを削除
+  let options = document.querySelectorAll('.option');
+  options.forEach(opt => opt.classList.remove('selected'));
+  selectedElem.classList.add('selected');
+  
   gameData.quizAnswer = option.text;
   gameData.quizCorrect = option.correct;
   gameData.quizPoints = option.correct ? gameData.quizDifficulty : 0;
