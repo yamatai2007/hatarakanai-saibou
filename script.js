@@ -150,17 +150,17 @@ function loadQuizQuestion() {
   navigate('quiz');
 }
 
-// 回答確認用の表示
+// 回答確認用のオーバーレイ表示
 function showConfirmation(option) {
   selectedOption = option;
   const confirmationDiv = document.getElementById('quiz-confirmation');
   const confirmationText = document.getElementById('confirmation-text');
   let content = `この回答「${option.text}」でよろしいですか？`;
   if (option.image) {
-    content += "\n（画像で確認）";
+    content += "（画像で確認）";
   }
   confirmationText.innerText = content;
-  confirmationDiv.style.display = 'block';
+  confirmationDiv.style.display = 'flex'; // オーバーレイ表示
 }
 
 // ユーザーが確認で「はい」「いいえ」を選んだ場合の処理
@@ -180,7 +180,7 @@ function confirmAnswer(isConfirmed) {
     feedbackDiv.style.display = 'block';
     confirmationDiv.style.display = 'none';
   } else {
-    // 「いいえ」の場合は、確認メッセージを閉じて再選択可能に
+    // 「いいえ」の場合はオーバーレイを閉じ、再度選択可能に
     confirmationDiv.style.display = 'none';
   }
 }
@@ -240,6 +240,6 @@ function submitData() {
     })
     .catch(error => {
       console.error("Error:", error);
-      alert("データ送信に失敗しました。");
+      alert("データの通信に失敗しました。");
     });
 }
