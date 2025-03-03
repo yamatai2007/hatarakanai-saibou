@@ -18,8 +18,8 @@
     <h2>グループ名を入力してください</h2>
     <input type="text" id="groupName" placeholder="グループ名">
     <div class="nav-buttons">
-      <button class="btn-prev" onclick="navigate('start')">前へ</button>
-      <button class="btn-next" onclick="saveGroupName()">次へ</button>
+      <button class="btn-nav" onclick="navigate('start')">前へ</button>
+      <button class="btn-nav" onclick="saveGroupName()">次へ</button>
     </div>
   </div>
 
@@ -32,8 +32,8 @@
       <button onclick="changeAntigen(1)">＋</button>
     </div>
     <div class="nav-buttons">
-      <button class="btn-prev" onclick="navigate('group')">前へ</button>
-      <button class="btn-next" onclick="saveAntigen()">次へ</button>
+      <button class="btn-nav" onclick="navigate('group')">前へ</button>
+      <button class="btn-nav" onclick="saveAntigen()">次へ</button>
     </div>
   </div>
 
@@ -48,8 +48,8 @@
       <button class="difficulty-btn" onclick="selectDifficulty(5, this)">レベル5</button>
     </div>
     <div class="nav-buttons">
-      <button class="btn-prev" onclick="navigate('antigen')">前へ</button>
-      <button class="btn-next" id="btn-difficulty-next" onclick="navigate('quiz'); loadQuizQuestion();" disabled>次へ</button>
+      <button class="btn-nav" onclick="navigate('antigen')">前へ</button>
+      <button class="btn-nav" id="btn-difficulty-next" onclick="navigate('quiz'); loadQuizQuestion();" disabled>次へ</button>
     </div>
   </div>
 
@@ -60,20 +60,22 @@
       <div id="quiz-options" class="options-container">
         <!-- 選択肢は JavaScript で生成 -->
       </div>
-      <!-- 回答確認用の画面 -->
+      <!-- 確認メッセージをオーバーレイ表示 -->
       <div id="quiz-confirmation" class="confirmation" style="display: none;">
-        <p id="confirmation-text"></p>
-        <button id="confirm-yes" onclick="confirmAnswer(true)">はい</button>
-        <button id="confirm-no" onclick="confirmAnswer(false)">いいえ</button>
+        <div class="confirmation-box">
+          <p id="confirmation-text"></p>
+          <button class="btn-nav" id="confirm-yes" onclick="confirmAnswer(true)">はい</button>
+          <button class="btn-nav" id="confirm-no" onclick="confirmAnswer(false)">いいえ</button>
+        </div>
       </div>
       <!-- 正誤判定＆解説表示 -->
       <div id="quiz-feedback" class="feedback" style="display: none;">
         <p id="feedback-text"></p>
-        <button onclick="nextAfterQuiz()">次へ</button>
+        <button class="btn-nav" onclick="nextAfterQuiz()">次へ</button>
       </div>
     </div>
     <div class="nav-buttons">
-      <button class="btn-prev" onclick="navigate('quiz-difficulty')">前へ</button>
+      <button class="btn-nav" onclick="navigate('quiz-difficulty')">前へ</button>
     </div>
   </div>
 
@@ -86,8 +88,8 @@
       <button onclick="changeTarget(1)">＋</button>
     </div>
     <div class="nav-buttons">
-      <button class="btn-prev" onclick="navigate('quiz')">前へ</button>
-      <button class="btn-next" onclick="saveTarget()">次へ</button>
+      <button class="btn-nav" onclick="navigate('quiz')">前へ</button>
+      <button class="btn-nav" onclick="saveTarget()">次へ</button>
     </div>
   </div>
 
@@ -95,8 +97,8 @@
   <div id="section-result" class="section" style="display: none;">
     <h2 id="result-message">あなたのグループの得点は ○○ 点です！</h2>
     <div class="nav-buttons">
-      <button class="btn-prev" onclick="navigate('target')">前へ</button>
-      <button class="btn-next" onclick="submitData()">結果を送信</button>
+      <button class="btn-nav" onclick="navigate('target')">前へ</button>
+      <button class="btn-nav" onclick="submitData()">結果を送信</button>
     </div>
   </div>
 
