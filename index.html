@@ -49,7 +49,6 @@
     </div>
     <div class="nav-buttons">
       <button class="btn-prev" onclick="navigate('antigen')">前へ</button>
-      <!-- 難易度選択後に有効化 -->
       <button class="btn-next" id="btn-difficulty-next" onclick="navigate('quiz'); loadQuizQuestion();" disabled>次へ</button>
     </div>
   </div>
@@ -61,6 +60,13 @@
       <div id="quiz-options" class="options-container">
         <!-- 選択肢は JavaScript で生成 -->
       </div>
+      <!-- 回答確認用の画面 -->
+      <div id="quiz-confirmation" class="confirmation" style="display: none;">
+        <p id="confirmation-text"></p>
+        <button id="confirm-yes" onclick="confirmAnswer(true)">はい</button>
+        <button id="confirm-no" onclick="confirmAnswer(false)">いいえ</button>
+      </div>
+      <!-- 正誤判定＆解説表示 -->
       <div id="quiz-feedback" class="feedback" style="display: none;">
         <p id="feedback-text"></p>
         <button onclick="nextAfterQuiz()">次へ</button>
@@ -68,7 +74,6 @@
     </div>
     <div class="nav-buttons">
       <button class="btn-prev" onclick="navigate('quiz-difficulty')">前へ</button>
-      <!-- 「次へ」はフィードバック後に進む -->
     </div>
   </div>
 
