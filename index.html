@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>はたらかない細胞 - クイズゲーム</title>
   <link rel="stylesheet" href="styles.css">
+  <!-- Google Fonts などでオシャレなフォントを読み込むのもおすすめ -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
   <!-- スタート画面 -->
@@ -63,12 +65,11 @@
       </div>
       <div id="quiz-feedback" class="feedback" style="display: none;">
         <p id="feedback-text"></p>
-        <button onclick="nextAfterQuiz()">次へ</button>
+        <button class="btn-next" onclick="nextAfterQuiz()">次へ</button>
       </div>
     </div>
     <div class="nav-buttons">
       <button class="btn-prev" onclick="navigate('quiz-difficulty')">前へ</button>
-      <!-- 「次へ」はフィードバック後に進む -->
     </div>
   </div>
 
