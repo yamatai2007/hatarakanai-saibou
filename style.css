@@ -1,10 +1,11 @@
+/* フォント・全体レイアウト */
 body {
-  font-family: 'Helvetica Neue', sans-serif;
-  background-color: #eef2f3;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f7f9fc;
   margin: 0;
   padding: 0;
   text-align: center;
-  color: #333;
+  color: #444;
 }
 
 .section {
@@ -14,42 +15,46 @@ body {
 }
 
 h1 {
-  font-size: 36px;
+  font-size: 38px;
   margin-bottom: 20px;
   color: #2d3436;
 }
 
 h2 {
-  font-size: 28px;
+  font-size: 30px;
   margin-bottom: 20px;
 }
 
+/* 入力フォーム */
 input[type="text"],
 input[type="number"] {
   font-size: 20px;
   padding: 10px;
   width: 80%;
   margin: 10px 0;
-  border: 2px solid #b2bec3;
-  border-radius: 5px;
+  border: 2px solid #c8d6e5;
+  border-radius: 8px;
 }
 
+/* ボタン */
 button {
   font-size: 20px;
-  padding: 10px 20px;
+  padding: 12px 24px;
   margin: 10px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: #0984e3;
   color: white;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 button:hover {
   background-color: #74b9ff;
+  transform: scale(1.02);
 }
 
+/* カウンター */
 .counter {
   display: flex;
   justify-content: center;
@@ -58,49 +63,68 @@ button:hover {
 }
 
 .counter button {
-  font-size: 24px;
+  font-size: 28px;
   padding: 10px;
   width: 50px;
 }
 
 .counter input {
-  font-size: 24px;
+  font-size: 28px;
   text-align: center;
   width: 80px;
 }
 
-.nav-buttons {
-  margin-top: 20px;
+/* ナビゲーションボタン */
+.nav-buttons button {
+  font-size: 22px;
+  padding: 14px 28px;
 }
 
+/* 難易度選択ボタン（グループ） */
 .button-group button {
-  font-size: 20px;
-  padding: 10px 20px;
+  font-size: 22px;
+  padding: 14px 28px;
   margin: 10px;
 }
 
-/* クイズ選択肢のスタイル */
+/* クイズ選択肢 */
 .options-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-around;
 }
 
 .option {
-  border: 2px solid #b2bec3;
-  border-radius: 8px;
+  border: 2px solid #c8d6e5;
+  border-radius: 10px;
   padding: 10px;
   margin: 10px;
-  width: 45%;
+  width: calc(33% - 20px);
   cursor: pointer;
-  transition: border-color 0.3s;
+  transition: border-color 0.3s, background-color 0.3s;
+  text-align: center;
 }
 
 .option:hover {
   border-color: #0984e3;
 }
 
+.option.selected {
+  border-color: #ff6f61;
+  background-color: #ffecec;
+}
+
+/* 画像サイズ・調整 */
+.option img {
+  max-width: 80px;
+  height: auto;
+  display: block;
+  margin: 0 auto 5px;
+}
+
+/* フィードバック */
 .feedback {
   margin-top: 20px;
   font-size: 22px;
+  color: #2d3436;
 }
