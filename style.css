@@ -6,7 +6,7 @@ body {
   padding: 0;
   text-align: center;
   color: #333;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .section {
@@ -16,21 +16,21 @@ body {
 }
 
 h1 {
-  font-size: 40px;
+  font-size: 44px;
   margin-bottom: 20px;
   color: #2d3436;
 }
 
 h2 {
-  font-size: 32px;
+  font-size: 36px;
   margin-bottom: 20px;
 }
 
 /* 入力フィールド */
 input[type="text"],
 input[type="number"] {
-  font-size: 24px;
-  padding: 10px;
+  font-size: 28px;
+  padding: 12px;
   width: 90%;
   margin: 10px 0;
   border: 2px solid #b2bec3;
@@ -39,8 +39,8 @@ input[type="number"] {
 
 /* 基本ボタン */
 button {
-  font-size: 24px;
-  padding: 12px 24px;
+  font-size: 28px;
+  padding: 16px 32px;
   margin: 10px;
   border: none;
   border-radius: 8px;
@@ -52,7 +52,7 @@ button {
 
 button:hover {
   background-color: #74b9ff;
-  transform: scale(1.03);
+  transform: scale(1.05);
 }
 
 /* カウンター */
@@ -64,15 +64,15 @@ button:hover {
 }
 
 .counter button {
-  font-size: 28px;
-  padding: 10px;
-  width: 50px;
+  font-size: 32px;
+  padding: 12px;
+  width: 60px;
 }
 
 .counter input {
-  font-size: 28px;
+  font-size: 32px;
   text-align: center;
-  width: 80px;
+  width: 100px;
 }
 
 /* ナビゲーションボタン群 */
@@ -82,8 +82,8 @@ button:hover {
 
 /* 難易度選択用ボタン */
 .button-group button.difficulty-btn {
-  font-size: 24px;
-  padding: 12px 24px;
+  font-size: 28px;
+  padding: 16px 32px;
   margin: 8px;
   border: 2px solid #0984e3;
   border-radius: 8px;
@@ -124,32 +124,38 @@ button:hover {
 }
 
 .option img {
-  max-width: 80%; /* 画像は小さめに */
+  max-width: 60%; /* 画像は小さめに */
   height: auto;
   margin-bottom: 8px;
+}
+
+/* 確認メッセージのスタイル */
+.confirmation {
+  margin-top: 20px;
+  font-size: 28px;
 }
 
 /* フィードバック表示 */
 .feedback {
   margin-top: 20px;
-  font-size: 24px;
+  font-size: 28px;
 }
 
-/* モバイル対応（必要に応じてさらに調整） */
+/* モバイル対応 */
 @media (max-width: 600px) {
   h1 {
-    font-size: 32px;
+    font-size: 36px;
   }
   h2 {
-    font-size: 28px;
+    font-size: 32px;
   }
   button {
-    font-size: 22px;
-    padding: 10px 20px;
+    font-size: 26px;
+    padding: 12px 24px;
   }
   input[type="text"],
   input[type="number"] {
-    font-size: 20px;
+    font-size: 24px;
   }
   .option {
     width: 90%;
