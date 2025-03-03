@@ -192,12 +192,26 @@ function showResult() {
   document.getElementById('result-message').innerText = `あなたのグループの得点は ${gameData.totalScore} 点です！`;
 }
 
-// Googleスプレッドシート連携（ここではシミュレーション）
+// Googleスプレッドシート連携（実際の送信）
 function submitData() {
-  // 送信するデータ：
-  // 入力時刻, グループ名, 抗原数, クイズの選択難易度, 選択された選択肢, 正誤, 的の数, 合計得点
-  console.log("送信データ:", gameData);
-  alert("データを送信しました！（シミュレーション）");
-  // 送信後、ゲームをリセットするか、最初の画面に戻る
-  navigate('start');
+  const url = "https://script.google.com/macros/s/AKfycbwX8xho1OCc2c6N14JrjCDx7DworvzaSc5CrFjShbHJaVokJCmpyXNolJQEzWilVB7K/exec";
+  // データ送信前にタイムスタンプ更新
+  gameData.timestamp = new Date().toISOString();
+  
+  fetch(url, {
+    method: "POST",
+    mode: "no-cors", // レスポンスは取得できませんが、送信は可能
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(gameData)
+  })
+  .then(() => {
+    alert("データを送信しました！");
+    navigate('start');
+  })
+  .catch(error => {
+    console.error("送信エラー:", error);
+    alert("データ送信に失敗しました。");
+  });
 }
