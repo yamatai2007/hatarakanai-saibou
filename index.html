@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>はたらかない細胞 ゲーム</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background-color: #f7f7f7;
+      color: #333;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+      color: #009688;
+    }
+    h2 {
+      font-size: 1.5em;
+      margin-bottom: 15px;
+      color: #00796B;
+    }
+    .step {
+      display: none;
+    }
+    .active {
+      display: block;
+    }
+    button {
+      background-color: #009688;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1em;
+      border-radius: 5px;
+      margin: 10px;
+      cursor: pointer;
+    }
+    input[type="text"], input[type="number"] {
+      padding: 10px;
+      font-size: 1em;
+      width: 80%;
+      max-width: 300px;
+      margin: 10px 0;
+    }
+    .quiz-option {
+      display: inline-block;
+      margin: 10px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      border-radius: 5px;
+      padding: 5px;
+    }
+    .quiz-option img {
+      max-width: 80px;
+      border-radius: 5px;
+    }
+    .quiz-option:hover {
+      border-color: #009688;
+    }
+    .selected {
+      border-color: #009688;
+    }
+    .feedback {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .explanation {
+      margin-top: 5px;
+      font-size: 0.9em;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <!-- Step 1: トップページ -->
+  <div id="step1" class="step active">
+    <h1>はたらかない細胞</h1>
+    <button id="startButton">ゲームスタート</button>
+  </div>
+
+  <!-- Step 2: グループ名入力 -->
+  <div id="step2" class="step">
+    <h2>グループ名を入力してください</h2>
+    <input type="text" id="groupName" placeholder="例: チームA">
+    <br>
+    <button id="toStep3">次へ</button>
+  </div>
+
+  <!-- Step 3: 抗原数選択 -->
+  <div id="step3" class="step">
+    <h2>抗原の数を選択してください</h2>
+    <button id="decreaseAntigen">-</button>
+    <input type="number" id="antigenCount" value="0" min="0">
+    <button id="increaseAntigen">+</button>
+    <br>
+    <button id="toStep4">次へ</button>
+  </div>
+
+  <!-- Step 4: クイズ難易度選択 -->
+  <div id="step4" class="step">
+    <h2>クイズの難易度を選択してください</h2>
+    <select id="quizDifficulty">
+      <option value="1">レベル1</option>
+      <option value="2">レベル2</option>
+      <option value="3">レベル3</option>
+      <option value="4">レベル4</option>
+      <option value="5">レベル5</option>
+    </select>
+    <br>
+    <button id="toStep5">次へ</button>
+  </div>
+
+  <!-- Step 5: クイズ -->
+  <div id="step5" class="step">
+    <h2>クイズに答えてください</h2>
+    <div id="quizContainer">
+      <!-- クイズの問題がここに挿入されます -->
+    </div>
+    <button id="finishQuiz" style="display:none;">クイズ終了</button>
+  </div>
+
+  <!-- Step 6: 的の数入力 -->
+  <div id="step6" class="step">
+    <h2>的の数を入力してください</h2>
+    <button id="decreaseTarget">-</button>
+    <input type="number" id="targetCount" value="0" min="0">
+    <button id="increaseTarget">+</button>
+    <br>
+    <button id="calculateScore">得点を計算する</button>
+  </div>
+
+  <!-- Step 7: 結果表示 -->
+  <div id="step7" class="step">
+    <h2 id="resultMessage"></h2>
+    <p>ゲーム終了！</p>
+  </div>
+
+  <script>
+    // 各ステップの表示管理
+    function showStep(stepId) {
+      document.querySelectorAll('.step').forEach(function(div) {
+        div.classList.remove('active');
+      });
+      document.getElementById(stepId).classList.add('active');
+    }
+
+    // ゲームデータの初期化
+    let gameData = {
+      groupName: "",
+      antigenCount: 0,
+      quizDifficulty: 1,
+      quizResponses: [],
+      targetCount: 0,
+      totalScore: 0
+    };
+
+    // 各ステップへの遷移イベント
+    document.getElementById('startButton').addEventListener('click', () => {
+      showStep('step2');
+    });
+
+    document.getElementById('toStep3').addEventListener('click', () => {
+      let name = document.getElementById('groupName').value.trim();
+      if(name === "") {
+        alert("グループ名を入力してください");
+        return;
+      }
+      gameData.groupName = name;
+      showStep('step3');
+    });
+
+    // 抗原数カウント操作
+    document.getElementById('decreaseAntigen').addEventListener('click', () => {
+      let input = document.getElementById('antigenCount');
+      let val = parseInt(input.value);
+      if(val > 0) {
+        input.value = val - 1;
+      }
+    });
+    document.getElementById('increaseAntigen').addEventListener('click', () => {
+      let input = document.getElementById('antigenCount');
+      input.value = parseInt(input.value) + 1;
+    });
+    document.getElementById('toStep4').addEventListener('click', () => {
+      gameData.antigenCount = parseInt(document.getElementById('antigenCount').value);
+      showStep('step4');
+    });
+
+    // クイズ難易度選択
+    document.getElementById('toStep5').addEventListener('click', () => {
+      gameData.quizDifficulty = parseInt(document.getElementById('quizDifficulty').value);
+      initQuiz();
+      showStep('step5');
+    });
+
+    // 的の数カウント操作
+    document.getElementById('decreaseTarget').addEventListener('click', () => {
+      let input = document.getElementById('targetCount');
+      let val = parseInt(input.value);
+      if(val > 0) {
+        input.value = val - 1;
+      }
+    });
+    document.getElementById('increaseTarget').addEventListener('click', () => {
+      let input = document.getElementById('targetCount');
+      input.value = parseInt(input.value) + 1;
+    });
+    document.getElementById('calculateScore').addEventListener('click', () => {
+      gameData.targetCount = parseInt(document.getElementById('targetCount').value);
+      calculateTotalScore();
+      showStep('step7');
+      sendDataToSheet();
+    });
+
+    // クイズ問題のデータ（画像問題はファイル名を使用しています）
+    const quizQuestions = [
+      {
+        question: "第1問",
+        type: "image",
+        options: [
+          { src: "トマト.jpeg", label: "トマト" },
+          { src: "赤血球.jpg", label: "赤血球" },
+          { src: "消防車.jpg", label: "消防車" }
+        ],
+        correct: "赤血球",
+        explanation: "赤血球は血液中の酸素運搬に関与します。"
+      },
+      {
+        question: "第2問",
+        type: "image",
+        options: [
+          { src: "自衛隊.jpeg", label: "自衛隊" },
+          { src: "白血球.png", label: "白血球" },
+          { src: "血小板.png", label: "血小板" }
+        ],
+        correct: "白血球",
+        explanation: "白血球は免疫系で重要な役割を果たします。"
+      },
+      {
+        question: "第3問",
+        type: "image",
+        options: [
+          { src: "タンパク質.png", label: "タンパク質" },
+          { src: "水素.jpg", label: "水素" },
+          { src: "酸素.jpg", label: "酸素" }
+        ],
+        correct: "酸素",
+        explanation: "酸素は生命維持に欠かせません。"
+      },
+      {
+        question: "第4問",
+        type: "image",
+        options: [
+          { src: "フィブリン.jpg", label: "フィブリン" },
+          { src: "フィブリノーゲン.jpg", label: "フィブリノーゲン" },
+          { src: "絆創膏.png", label: "絆創膏" }
+        ],
+        correct: "フィブリン",
+        explanation: "フィブリンは血液凝固に関与します。"
+      },
+      {
+        question: "第5問",
+        type: "text",
+        options: [
+          { label: "食作用" },
+          { label: "抗原提示" },
+          { label: "細菌提示" },
+          { label: "免疫応答" }
+        ],
+        correct: "抗原提示",
+        explanation: "抗原提示は免疫系が抗原を認識するために必要です。"
+      }
+    ];
+
+    let currentQuizIndex = 0;
+    let quizScore = 0;
+
+    function initQuiz() {
+      currentQuizIndex = 0;
+      quizScore = 0;
+      gameData.quizResponses = [];
+      showQuizQuestion();
+    }
+
+    function showQuizQuestion() {
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = '';
+      if (currentQuizIndex >= quizQuestions.length) {
+        document.getElementById('finishQuiz').style.display = 'block';
+        return;
+      }
+      const currentQuestion = quizQuestions[currentQuizIndex];
+      const qDiv = document.createElement('div');
+      qDiv.innerHTML = `<h3>${currentQuestion.question}</h3>`;
+      currentQuestion.options.forEach(option => {
+        let optionDiv = document.createElement('div');
+        optionDiv.classList.add('quiz-option');
+        optionDiv.dataset.label = option.label;
+        optionDiv.addEventListener('click', () => {
+          handleQuizAnswer(option.label, optionDiv);
+        });
+        if (currentQuestion.type === "image") {
+          optionDiv.innerHTML = `<img src="${option.src}" alt="${option.label}"><br>${option.label}`;
+        } else {
+          optionDiv.innerHTML = `<span>${option.label}</span>`;
+        }
+        qDiv.appendChild(optionDiv);
+      });
+      container.appendChild(qDiv);
+    }
+
+    function handleQuizAnswer(selectedLabel, optionDiv) {
+      const currentQuestion = quizQuestions[currentQuizIndex];
+      let isCorrect = (selectedLabel === currentQuestion.correct);
+      if (isCorrect) {
+        quizScore += parseInt(gameData.quizDifficulty);
+      }
+      gameData.quizResponses.push({
+        questionIndex: currentQuizIndex,
+        selectedOption: selectedLabel,
+        correct: isCorrect,
+        explanation: currentQuestion.explanation
+      });
+      optionDiv.classList.add('selected');
+      let feedbackDiv = document.createElement('div');
+      feedbackDiv.classList.add('feedback');
+      feedbackDiv.innerText = isCorrect ? "正解！" : "不正解";
+      let explanationDiv = document.createElement('div');
+      explanationDiv.classList.add('explanation');
+      explanationDiv.innerText = currentQuestion.explanation;
+      optionDiv.parentNode.appendChild(feedbackDiv);
+      optionDiv.parentNode.appendChild(explanationDiv);
+      setTimeout(() => {
+        currentQuizIndex++;
+        showQuizQuestion();
+      }, 1000);
+    }
+
+    document.getElementById('finishQuiz').addEventListener('click', () => {
+      showStep('step6');
+    });
+
+    // 得点計算：抗原ポイントは入力数により決定
+    function calculateTotalScore() {
+      let antigenPoints = 1;
+      const count = gameData.antigenCount;
+      if (count >= 1 && count <= 5) {
+        antigenPoints = 2;
+      } else if (count >= 6 && count <= 10) {
+        antigenPoints = 3;
+      } else if (count >= 11 && count <= 15) {
+        antigenPoints = 4;
+      } else if (count >= 16) {
+        antigenPoints = 5;
+      }
+      const quizPoints = quizScore;
+      gameData.totalScore = (antigenPoints + quizPoints) * gameData.targetCount;
+      document.getElementById('resultMessage').innerText = `あなたのグループの得点は ${gameData.totalScore} 点です！`;
+    }
+
+    // Googleスプレッドシート連携（Google Apps Script Web AppのURLにPOST）
+    function sendDataToSheet() {
+      const spreadsheetEndpoint = "https://script.google.com/macros/s/your-script-id/exec"; // ←ここを置き換えてください
+      const payload = {
+        groupName: gameData.groupName,
+        antigenCount: gameData.antigenCount,
+        quizDifficulty: gameData.quizDifficulty,
+        quizResponses: gameData.quizResponses,
+        targetCount: gameData.targetCount,
+        totalScore: gameData.totalScore
+      };
+
+      fetch(spreadsheetEndpoint, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(response => {
+        console.log("データ送信完了", response);
+      })
+      .catch(error => {
+        console.error("送信エラー", error);
+      });
+    }
+  </script>
+</body>
+</html>
