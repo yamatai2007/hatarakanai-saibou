@@ -1,12 +1,12 @@
-/* 全体のフォントサイズやレイアウトの調整 */
+/* 全体のフォントサイズ、レイアウト、色合い */
 body {
   font-family: 'Helvetica Neue', sans-serif;
-  background: linear-gradient(135deg, #f8d7da, #fceabb);
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
   margin: 0;
   padding: 0;
   text-align: center;
   color: #333;
-  font-size: 20px;
+  font-size: 24px;
 }
 
 .section {
@@ -16,41 +16,41 @@ body {
 }
 
 h1 {
-  font-size: 44px;
+  font-size: 52px;
   margin-bottom: 20px;
   color: #2d3436;
 }
 
 h2 {
-  font-size: 36px;
+  font-size: 44px;
   margin-bottom: 20px;
 }
 
 /* 入力フィールド */
 input[type="text"],
 input[type="number"] {
-  font-size: 28px;
-  padding: 12px;
+  font-size: 32px;
+  padding: 16px;
   width: 90%;
   margin: 10px 0;
   border: 2px solid #b2bec3;
   border-radius: 5px;
 }
 
-/* 基本ボタン */
-button {
-  font-size: 28px;
-  padding: 16px 32px;
-  margin: 10px;
+/* 基本ボタン・ナビゲーションボタン */
+.btn-nav, button {
+  font-size: 36px;
+  padding: 24px 48px;
+  margin: 20px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   background-color: #0984e3;
   color: white;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.1s;
 }
 
-button:hover {
+.btn-nav:hover, button:hover {
   background-color: #74b9ff;
   transform: scale(1.05);
 }
@@ -60,33 +60,33 @@ button:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .counter button {
-  font-size: 32px;
-  padding: 12px;
-  width: 60px;
+  font-size: 42px;
+  padding: 20px;
+  width: 80px;
 }
 
 .counter input {
-  font-size: 32px;
+  font-size: 42px;
   text-align: center;
-  width: 100px;
+  width: 140px;
 }
 
 /* ナビゲーションボタン群 */
 .nav-buttons {
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 /* 難易度選択用ボタン */
 .button-group button.difficulty-btn {
-  font-size: 28px;
-  padding: 16px 32px;
-  margin: 8px;
-  border: 2px solid #0984e3;
-  border-radius: 8px;
+  font-size: 36px;
+  padding: 24px 48px;
+  margin: 15px;
+  border: 4px solid #0984e3;
+  border-radius: 10px;
   background-color: #ffeaa7;
   color: #2d3436;
   transition: background-color 0.3s, border-color 0.3s;
@@ -98,10 +98,10 @@ button:hover {
 
 .button-group button.difficulty-btn.selected {
   background-color: #55efc4;
-  border-color: #00b894;
+  border-color: #0000ff; /* 青い枠で選択状態を強調 */
 }
 
-/* クイズ選択肢のスタイル */
+/* クイズ選択肢 */
 .options-container {
   display: flex;
   flex-wrap: wrap;
@@ -109,10 +109,10 @@ button:hover {
 }
 
 .option {
-  border: 2px solid #b2bec3;
-  border-radius: 8px;
-  padding: 10px;
-  margin: 10px;
+  border: 4px solid #b2bec3;
+  border-radius: 10px;
+  padding: 16px;
+  margin: 15px;
   width: 45%;
   box-sizing: border-box;
   cursor: pointer;
@@ -124,40 +124,65 @@ button:hover {
 }
 
 .option img {
-  max-width: 60%; /* 画像は小さめに */
+  max-width: 30%;  /* 画像をさらに縮小 */
   height: auto;
   margin-bottom: 8px;
 }
 
-/* 確認メッセージのスタイル */
+/* 確認メッセージをオーバーレイ表示 */
 .confirmation {
-  margin-top: 20px;
-  font-size: 28px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.confirmation .confirmation-box {
+  background: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  text-align: center;
+  width: 80%;
+  max-width: 500px;
+}
+
+.confirmation p {
+  font-size: 32px;
+  margin-bottom: 30px;
 }
 
 /* フィードバック表示 */
 .feedback {
-  margin-top: 20px;
-  font-size: 28px;
+  margin-top: 30px;
+  font-size: 32px;
 }
 
 /* モバイル対応 */
 @media (max-width: 600px) {
   h1 {
-    font-size: 36px;
+    font-size: 42px;
   }
   h2 {
-    font-size: 32px;
+    font-size: 36px;
   }
-  button {
-    font-size: 26px;
-    padding: 12px 24px;
+  .btn-nav, button {
+    font-size: 32px;
+    padding: 20px 40px;
   }
   input[type="text"],
   input[type="number"] {
-    font-size: 24px;
+    font-size: 28px;
   }
   .option {
     width: 90%;
+  }
+  .confirmation p {
+    font-size: 28px;
   }
 }
