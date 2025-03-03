@@ -109,10 +109,14 @@ function saveAntigen() {
 }
 
 // クイズ難易度選択
-function selectDifficulty(level) {
+function selectDifficulty(level, btnElement) {
   gameData.quizDifficulty = level;
   currentQuizLevel = level;
-  // 難易度選択後、次へボタンを有効化
+  // 選択状態を視覚的に表示
+  const btns = document.querySelectorAll('.difficulty-btn');
+  btns.forEach(btn => btn.classList.remove('selected'));
+  btnElement.classList.add('selected');
+  // 次へボタンを有効化
   document.getElementById('btn-difficulty-next').disabled = false;
 }
 
@@ -135,8 +139,7 @@ function loadQuizQuestion() {
     const span = document.createElement('span');
     span.innerText = option.text;
     div.appendChild(span);
-    // クリック時に「selected」クラスを付与
-    div.addEventListener('click', (e) => { selectQuizOption(option, e.currentTarget); });
+    div.addEventListener('click', () => { selectQuizOption(option); });
     optionsContainer.appendChild(div);
   });
   // フィードバック部分を非表示に
@@ -144,13 +147,8 @@ function loadQuizQuestion() {
   navigate('quiz');
 }
 
-// 選択肢がクリックされた時の処理（選択状態を視覚的に表示）
-function selectQuizOption(option, selectedElem) {
-  // 全ての選択肢から "selected" クラスを削除
-  let options = document.querySelectorAll('.option');
-  options.forEach(opt => opt.classList.remove('selected'));
-  selectedElem.classList.add('selected');
-  
+// 選択肢がクリックされた時の処理
+function selectQuizOption(option) {
   gameData.quizAnswer = option.text;
   gameData.quizCorrect = option.correct;
   gameData.quizPoints = option.correct ? gameData.quizDifficulty : 0;
@@ -197,26 +195,28 @@ function showResult() {
   document.getElementById('result-message').innerText = `あなたのグループの得点は ${gameData.totalScore} 点です！`;
 }
 
-// Googleスプレッドシート連携（実際の送信）
+// Googleスプレッドシート連携
+// 送信するデータ：送った時間、グループ名、抗原数、クイズの選択難易度、正誤、的の数、合計得点
 function submitData() {
-  const url = "https://script.google.com/macros/s/AKfycbwX8xho1OCc2c6N14JrjCDx7DworvzaSc5CrFjShbHJaVokJCmpyXNolJQEzWilVB7K/exec";
-  // データ送信前にタイムスタンプ更新
-  gameData.timestamp = new Date().toISOString();
-  
-  fetch(url, {
-    method: "POST",
-    mode: "no-cors", // レスポンスは取得できませんが、送信は可能
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(gameData)
-  })
-  .then(() => {
-    alert("データを送信しました！");
-    navigate('start');
-  })
-  .catch(error => {
-    console.error("送信エラー:", error);
-    alert("データ送信に失敗しました。");
+  const endpoint = "https://script.google.com/macros/s/AKfycbwX8xho1OCc2c6N14JrjCDx7DworvzaSc5CrFjShbHJaVokJCmpyXNolJQEzWilVB7K/exec";
+  const params = new URLSearchParams({
+    timestamp: gameData.timestamp,
+    groupName: gameData.groupName,
+    antigenCount: gameData.antigenCount,
+    quizDifficulty: gameData.quizDifficulty,
+    quizCorrect: gameData.quizCorrect,
+    targetCount: gameData.targetCount,
+    totalScore: gameData.totalScore
   });
+  
+  fetch(`${endpoint}?${params.toString()}`)
+    .then(response => response.text())
+    .then(result => {
+      alert("データ送信完了！");
+      navigate('start');
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("データ送信に失敗しました。");
+    });
 }
