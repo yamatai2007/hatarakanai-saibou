@@ -12,6 +12,8 @@ let gameData = {
   timestamp: ''
 };
 
+let selectedOption = null; // ユーザーが選択した回答を保持
+
 // 各レベルのクイズデータ
 const quizQuestions = {
   1: {
@@ -64,14 +66,14 @@ const quizQuestions = {
 
 let currentQuizLevel = 0; // 現在のクイズ難易度
 
-// ページ（セクション）の表示・非表示を切り替える関数
+// ページ（セクション）の表示・非表示を切り替える
 function navigate(section) {
   const sections = document.querySelectorAll('.section');
   sections.forEach(sec => sec.style.display = 'none');
   document.getElementById('section-' + section).style.display = 'block';
 }
 
-// スタートボタンの動作
+// スタートボタン
 document.getElementById('btn-start').addEventListener('click', () => {
   navigate('group');
 });
@@ -120,16 +122,16 @@ function selectDifficulty(level, btnElement) {
   document.getElementById('btn-difficulty-next').disabled = false;
 }
 
-// クイズ画面に移行したときに問題をロード
+// クイズ画面に移行したときの処理
 function loadQuizQuestion() {
   const quizData = quizQuestions[currentQuizLevel];
   document.getElementById('quiz-question').innerText = quizData.question;
   const optionsContainer = document.getElementById('quiz-options');
   optionsContainer.innerHTML = '';
+  selectedOption = null;
   quizData.options.forEach(option => {
     const div = document.createElement('div');
     div.className = 'option';
-    // 画像がある場合は画像を表示
     if (option.image) {
       const img = document.createElement('img');
       img.src = option.image;
@@ -139,30 +141,51 @@ function loadQuizQuestion() {
     const span = document.createElement('span');
     span.innerText = option.text;
     div.appendChild(span);
-    div.addEventListener('click', () => { selectQuizOption(option); });
+    div.addEventListener('click', () => { showConfirmation(option); });
     optionsContainer.appendChild(div);
   });
-  // フィードバック部分を非表示に
+  // 確認とフィードバックの非表示
+  document.getElementById('quiz-confirmation').style.display = 'none';
   document.getElementById('quiz-feedback').style.display = 'none';
   navigate('quiz');
 }
 
-// 選択肢がクリックされた時の処理
-function selectQuizOption(option) {
-  gameData.quizAnswer = option.text;
-  gameData.quizCorrect = option.correct;
-  gameData.quizPoints = option.correct ? gameData.quizDifficulty : 0;
-  const feedbackDiv = document.getElementById('quiz-feedback');
-  const feedbackText = document.getElementById('feedback-text');
-  if (option.correct) {
-    feedbackText.innerText = "正解！ " + quizQuestions[currentQuizLevel].explanation;
-  } else {
-    feedbackText.innerText = "不正解。 " + quizQuestions[currentQuizLevel].explanation;
+// 回答確認用の表示
+function showConfirmation(option) {
+  selectedOption = option;
+  const confirmationDiv = document.getElementById('quiz-confirmation');
+  const confirmationText = document.getElementById('confirmation-text');
+  let content = `この回答「${option.text}」でよろしいですか？`;
+  if (option.image) {
+    content += "\n（画像で確認）";
   }
-  feedbackDiv.style.display = 'block';
+  confirmationText.innerText = content;
+  confirmationDiv.style.display = 'block';
 }
 
-// 「次へ」ボタンでクイズ画面から次の画面に進む
+// ユーザーが確認で「はい」「いいえ」を選んだ場合の処理
+function confirmAnswer(isConfirmed) {
+  const confirmationDiv = document.getElementById('quiz-confirmation');
+  if (isConfirmed) {
+    gameData.quizAnswer = selectedOption.text;
+    gameData.quizCorrect = selectedOption.correct;
+    gameData.quizPoints = selectedOption.correct ? gameData.quizDifficulty : 0;
+    const feedbackDiv = document.getElementById('quiz-feedback');
+    const feedbackText = document.getElementById('feedback-text');
+    if (selectedOption.correct) {
+      feedbackText.innerText = "正解！ " + quizQuestions[currentQuizLevel].explanation;
+    } else {
+      feedbackText.innerText = "不正解。 " + quizQuestions[currentQuizLevel].explanation;
+    }
+    feedbackDiv.style.display = 'block';
+    confirmationDiv.style.display = 'none';
+  } else {
+    // 「いいえ」の場合は、確認メッセージを閉じて再選択可能に
+    confirmationDiv.style.display = 'none';
+  }
+}
+
+// 「次へ」ボタンでクイズから的の数入力画面へ
 function nextAfterQuiz() {
   navigate('target');
 }
@@ -184,19 +207,19 @@ function saveTarget() {
   navigate('result');
 }
 
-// 得点の計算： (抗原ポイント + クイズポイント) × 的の数
+// 得点計算： (抗原ポイント + クイズポイント) × 的の数
 function calculateScore() {
   gameData.totalScore = (gameData.antigenPoints + gameData.quizPoints) * gameData.targetCount;
   gameData.timestamp = new Date().toISOString();
 }
 
-// 結果の表示
+// 結果表示
 function showResult() {
   document.getElementById('result-message').innerText = `あなたのグループの得点は ${gameData.totalScore} 点です！`;
 }
 
 // Googleスプレッドシート連携
-// 送信するデータ：送った時間、グループ名、抗原数、クイズの選択難易度、正誤、的の数、合計得点
+// 送信データ：送った時間、グループ名、抗原数、クイズの選択難易度、正誤、的の数、合計得点
 function submitData() {
   const endpoint = "https://script.google.com/macros/s/AKfycbwX8xho1OCc2c6N14JrjCDx7DworvzaSc5CrFjShbHJaVokJCmpyXNolJQEzWilVB7K/exec";
   const params = new URLSearchParams({
