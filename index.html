@@ -1,107 +1,80 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>はたらかない細胞 - クイズゲーム</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>はたらかない細胞</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- スタート画面 -->
-  <div id="section-start" class="section">
-    <h1>はたらかない細胞</h1>
-    <button id="btn-start">ゲームスタート</button>
-  </div>
+    <div id="container">
+        <h1>はたらかない細胞</h1>
 
-  <!-- グループ名入力画面 -->
-  <div id="section-group" class="section" style="display: none;">
-    <h2>グループ名を入力してください</h2>
-    <input type="text" id="groupName" placeholder="グループ名">
-    <div class="nav-buttons">
-      <button class="btn-nav" onclick="navigate('start')">前へ</button>
-      <button class="btn-nav" onclick="saveGroupName()">次へ</button>
-    </div>
-  </div>
+        <!-- ゲーム開始ボタン -->
+        <button id="startButton">ゲームスタート</button>
 
-  <!-- 抗原数選択画面 -->
-  <div id="section-antigen" class="section" style="display: none;">
-    <h2>抗原数を選択してください</h2>
-    <div class="counter">
-      <button onclick="changeAntigen(-1)">－</button>
-      <input type="number" id="antigenCount" value="0" min="0">
-      <button onclick="changeAntigen(1)">＋</button>
-    </div>
-    <div class="nav-buttons">
-      <button class="btn-nav" onclick="navigate('group')">前へ</button>
-      <button class="btn-nav" onclick="saveAntigen()">次へ</button>
-    </div>
-  </div>
+        <!-- ゲームの流れ -->
+        <div id="gameFlow" style="display: none;">
+            <!-- グループ名入力 -->
+            <div id="groupNameSection">
+                <h2>グループ名を入力してください</h2>
+                <input type="text" id="groupName" placeholder="グループ名">
+                <button onclick="nextStep('antigenSection')">次へ</button>
+            </div>
 
-  <!-- クイズ難易度選択画面 -->
-  <div id="section-quiz-difficulty" class="section" style="display: none;">
-    <h2>クイズの難易度を選択してください</h2>
-    <div id="difficulty-buttons" class="button-group">
-      <button class="difficulty-btn" onclick="selectDifficulty(1, this)">レベル1</button>
-      <button class="difficulty-btn" onclick="selectDifficulty(2, this)">レベル2</button>
-      <button class="difficulty-btn" onclick="selectDifficulty(3, this)">レベル3</button>
-      <button class="difficulty-btn" onclick="selectDifficulty(4, this)">レベル4</button>
-      <button class="difficulty-btn" onclick="selectDifficulty(5, this)">レベル5</button>
-    </div>
-    <div class="nav-buttons">
-      <button class="btn-nav" onclick="navigate('antigen')">前へ</button>
-      <button class="btn-nav" id="btn-difficulty-next" onclick="navigate('quiz'); loadQuizQuestion();" disabled>次へ</button>
-    </div>
-  </div>
+            <!-- 抗原数の選択 -->
+            <div id="antigenSection" style="display: none;">
+                <h2>抗原数を選択</h2>
+                <input type="number" id="antigenCount" min="0">
+                <button onclick="nextStep('quizLevelSection')">次へ</button>
+            </div>
 
-  <!-- クイズ画面 -->
-  <div id="section-quiz" class="section" style="display: none;">
-    <div id="quiz-container">
-      <h2 id="quiz-question">クイズの質問</h2>
-      <div id="quiz-options" class="options-container">
-        <!-- 選択肢は JavaScript で生成 -->
-      </div>
-      <!-- 確認メッセージをオーバーレイ表示 -->
-      <div id="quiz-confirmation" class="confirmation" style="display: none;">
-        <div class="confirmation-box">
-          <p id="confirmation-text"></p>
-          <button class="btn-nav" id="confirm-yes" onclick="confirmAnswer(true)">はい</button>
-          <button class="btn-nav" id="confirm-no" onclick="confirmAnswer(false)">いいえ</button>
+            <!-- クイズ難易度選択 -->
+            <div id="quizLevelSection" style="display: none;">
+                <h2>クイズの難易度を選択</h2>
+                <button class="levelButton" onclick="selectLevel(1)">レベル1</button>
+                <button class="levelButton" onclick="selectLevel(2)">レベル2</button>
+                <button class="levelButton" onclick="selectLevel(3)">レベル3</button>
+                <button class="levelButton" onclick="selectLevel(4)">レベル4</button>
+                <button class="levelButton" onclick="selectLevel(5)">レベル5</button>
+                <button onclick="nextStep('quizSection')">次へ</button>
+            </div>
+
+            <!-- クイズ問題 -->
+            <div id="quizSection" style="display: none;">
+                <h2 id="quizQuestion">ここに問題が表示される</h2>
+                <div id="quizOptions"></div>
+                <button onclick="confirmAnswer()">回答</button>
+            </div>
+
+            <!-- 確認メッセージ -->
+            <div id="confirmMessage" style="display: none;">
+                <h3>この回答でよろしいですか？</h3>
+                <button onclick="submitAnswer(true)">はい</button>
+                <button onclick="submitAnswer(false)">いいえ</button>
+            </div>
+
+            <!-- 正解・不正解表示 -->
+            <div id="answerResult" style="display: none;">
+                <h2 id="resultText"></h2>
+                <p id="explanation"></p>
+                <button onclick="nextStep('targetSection')">次へ</button>
+            </div>
+
+            <!-- 的の数入力 -->
+            <div id="targetSection" style="display: none;">
+                <h2>的の数を入力</h2>
+                <input type="number" id="targetCount" min="0">
+                <button onclick="calculateScore()">結果を表示</button>
+            </div>
+
+            <!-- 結果表示 -->
+            <div id="resultSection" style="display: none;">
+                <h2>あなたのグループの得点は <span id="finalScore"></span> 点です！</h2>
+            </div>
         </div>
-      </div>
-      <!-- 正誤判定＆解説表示 -->
-      <div id="quiz-feedback" class="feedback" style="display: none;">
-        <p id="feedback-text"></p>
-        <button class="btn-nav" onclick="nextAfterQuiz()">次へ</button>
-      </div>
     </div>
-    <div class="nav-buttons">
-      <button class="btn-nav" onclick="navigate('quiz-difficulty')">前へ</button>
-    </div>
-  </div>
 
-  <!-- 的の数入力画面 -->
-  <div id="section-target" class="section" style="display: none;">
-    <h2>的の数を入力してください</h2>
-    <div class="counter">
-      <button onclick="changeTarget(-1)">－</button>
-      <input type="number" id="targetCount" value="0" min="0">
-      <button onclick="changeTarget(1)">＋</button>
-    </div>
-    <div class="nav-buttons">
-      <button class="btn-nav" onclick="navigate('quiz')">前へ</button>
-      <button class="btn-nav" onclick="saveTarget()">次へ</button>
-    </div>
-  </div>
-
-  <!-- 結果表示画面 -->
-  <div id="section-result" class="section" style="display: none;">
-    <h2 id="result-message">あなたのグループの得点は ○○ 点です！</h2>
-    <div class="nav-buttons">
-      <button class="btn-nav" onclick="navigate('target')">前へ</button>
-      <button class="btn-nav" onclick="submitData()">結果を送信</button>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
