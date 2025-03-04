@@ -7,72 +7,60 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="container">
+
+    <div class="container">
         <h1>はたらかない細胞</h1>
 
-        <!-- ゲーム開始ボタン -->
-        <button id="startButton">ゲームスタート</button>
-
-        <!-- ゲームの流れ -->
-        <div id="gameFlow" style="display: none;">
-            <!-- グループ名入力 -->
-            <div id="groupNameSection">
-                <h2>グループ名を入力してください</h2>
-                <input type="text" id="groupName" placeholder="グループ名">
-                <button onclick="nextStep('antigenSection')">次へ</button>
-            </div>
-
-            <!-- 抗原数の選択 -->
-            <div id="antigenSection" style="display: none;">
-                <h2>抗原数を選択</h2>
-                <input type="number" id="antigenCount" min="0">
-                <button onclick="nextStep('quizLevelSection')">次へ</button>
-            </div>
-
-            <!-- クイズ難易度選択 -->
-            <div id="quizLevelSection" style="display: none;">
-                <h2>クイズの難易度を選択</h2>
-                <button class="levelButton" onclick="selectLevel(1)">レベル1</button>
-                <button class="levelButton" onclick="selectLevel(2)">レベル2</button>
-                <button class="levelButton" onclick="selectLevel(3)">レベル3</button>
-                <button class="levelButton" onclick="selectLevel(4)">レベル4</button>
-                <button class="levelButton" onclick="selectLevel(5)">レベル5</button>
-                <button onclick="nextStep('quizSection')">次へ</button>
-            </div>
-
-            <!-- クイズ問題 -->
-            <div id="quizSection" style="display: none;">
-                <h2 id="quizQuestion">ここに問題が表示される</h2>
-                <div id="quizOptions"></div>
-                <button onclick="confirmAnswer()">回答</button>
-            </div>
-
-            <!-- 確認メッセージ -->
-            <div id="confirmMessage" style="display: none;">
-                <h3>この回答でよろしいですか？</h3>
-                <button onclick="submitAnswer(true)">はい</button>
-                <button onclick="submitAnswer(false)">いいえ</button>
-            </div>
-
-            <!-- 正解・不正解表示 -->
-            <div id="answerResult" style="display: none;">
-                <h2 id="resultText"></h2>
-                <p id="explanation"></p>
-                <button onclick="nextStep('targetSection')">次へ</button>
-            </div>
-
-            <!-- 的の数入力 -->
-            <div id="targetSection" style="display: none;">
-                <h2>的の数を入力</h2>
-                <input type="number" id="targetCount" min="0">
-                <button onclick="calculateScore()">結果を表示</button>
-            </div>
-
-            <!-- 結果表示 -->
-            <div id="resultSection" style="display: none;">
-                <h2>あなたのグループの得点は <span id="finalScore"></span> 点です！</h2>
-            </div>
+        <!-- ステップ1: グループ名入力 -->
+        <div id="step1">
+            <h2>グループ名を入力</h2>
+            <input type="text" id="groupName" placeholder="グループ名を入力">
+            <button onclick="nextStep(2)">次へ</button>
         </div>
+
+        <!-- ステップ2: 抗原数の選択 -->
+        <div id="step2" class="hidden">
+            <h2>抗原の数を選択</h2>
+            <button onclick="adjustAntigen(-1)">-</button>
+            <span id="antigenCount">0</span>
+            <button onclick="adjustAntigen(1)">+</button>
+            <button onclick="nextStep(3)">次へ</button>
+        </div>
+
+        <!-- ステップ3: クイズの難易度選択 -->
+        <div id="step3" class="hidden">
+            <h2>クイズの難易度を選択</h2>
+            <div id="difficultyButtons">
+                <button onclick="selectDifficulty(1)">レベル1</button>
+                <button onclick="selectDifficulty(2)">レベル2</button>
+                <button onclick="selectDifficulty(3)">レベル3</button>
+                <button onclick="selectDifficulty(4)">レベル4</button>
+                <button onclick="selectDifficulty(5)">レベル5</button>
+            </div>
+            <button onclick="nextStep(4)">次へ</button>
+        </div>
+
+        <!-- ステップ4: クイズ -->
+        <div id="step4" class="hidden">
+            <h2 id="quizQuestion">問題</h2>
+            <div id="quizOptions"></div>
+            <button onclick="nextStep(5)">次へ</button>
+        </div>
+
+        <!-- ステップ5: 的の数を入力 -->
+        <div id="step5" class="hidden">
+            <h2>的の数を入力</h2>
+            <input type="number" id="targetCount" min="0" value="0">
+            <button onclick="calculateScore()">結果を見る</button>
+        </div>
+
+        <!-- ステップ6: 結果 -->
+        <div id="step6" class="hidden">
+            <h2>あなたのグループの得点は</h2>
+            <p id="finalScore"></p>
+            <button onclick="sendToSpreadsheet()">スプレッドシートに送信</button>
+        </div>
+
     </div>
 
     <script src="script.js"></script>
